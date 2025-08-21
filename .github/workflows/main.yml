@@ -1,0 +1,82 @@
+# A name for your workflow, which will be displayed on the Actions tab in GitHub
+name: CI/CD Pipeline
+
+# This section defines when the workflow should run.
+# Here, it runs on every push to the "main" branch.
+on:
+  push:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This is the job for our Go Backend
+  build-backend:
+    # The type of virtual machine to run the job on. "ubuntu-latest" is a standard choice.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code so the workflow can access it
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up the Go programming language environment
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19 # Use a specific version of Go
+
+      # Step 3: Run the unit tests for the backend
+      - name: Run Backend Tests
+        # 'backend' is the assumed folder for your Go code
+        run: cd backend && go test ./...
+
+      # Step 4: Log in to Docker Hub using the secrets we configured
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 5: Build the backend Docker image and push it to Docker Hub
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend # The folder where the backend's Dockerfile is located
+          push: true # Actually push the image after building
+          # The name of the image. Format is your-dockerhub-username/image-name:tag
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ab-testing-backend:latest
+
+  # This is the job for our Vue.js Frontend
+  build-frontend:
+    # It runs on the same type of machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js, which is needed to build the Vue app
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Use a Long Term Support (LTS) version of Node
+
+      # Step 3: (Optional but good practice) Install dependencies and run any frontend tests
+      # - name: Install Dependencies & Run Tests
+      #   run: cd frontend && npm install && npm run test
+
+      # Step 4: Log in to Docker Hub (same as the backend job)
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 5: Build the frontend Docker image and push it to Docker Hub
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend # The folder where the frontend's Dockerfile is located
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ab-testing-frontend:latest
