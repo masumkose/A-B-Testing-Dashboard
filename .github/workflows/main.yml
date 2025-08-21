@@ -23,7 +23,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19 # Use a specific version of Go
+          go-version: 1.23 # Use a specific version of Go
 
       # Step 3: Run the unit tests for the backend
       - name: Run Backend Tests
