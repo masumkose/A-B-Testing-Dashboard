@@ -20,6 +20,8 @@ func setupTestDB() {
 		panic("Failed to connect to test database!")
 	}
 
+	database.Migrator().DropTable(&Experiment{}, &Variation{})
+
 	err = database.AutoMigrate(&Experiment{}, &Variation{})
 	if err != nil {
 		panic("Failed to migrate test database!")
