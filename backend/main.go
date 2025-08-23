@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
 // setupRouter configures the routes for our application.
 // We create it as a separate function so we can also use it in our tests.
 
@@ -12,24 +13,61 @@ func setupRouter () *gin.Engine {
 	// gin.Default() creates a new Gin router with some default middleware (for logging, etc.)
 	router := gin.Default()
 
+	// Group all our API endpoints under /api for better organization
+	api := router.Group("/api")
+	{
+		// Get /api/experiments - List all experiments
+		api.GET("/experiments", func(c *gin.Context) {
+			var experiments []Experiment
+			// Preload("Variations") tells GORM to also fetch the associated variations for each experiment.
+			DB.Preload("Variations").Find(&experiments)
+			c.JSON(http.StatusOK, experiments)
+		})
 
-	// This defines a GET endpoint. When a user sends a GET request to "/ping",
-	// the function that follows will be executed.
+		api.POST("/experiments", func(c *gin.Context) {
+			var input struct {
+				Name		string		`json:"name" binding:"required"`
+				Variations	[]string	`json:"variations" binding:"required,min=2"`
+			}
+	
+			if err := c.ShouldBindJSON(&input); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+				return
+			}
+	
+			experiment := Experiment{Name: input.Name}
+			DB.Create(&experiment)
+	
+	
+			// create the associated variations
+	
+			for _, varName:= range input.Variations {
+				variation := Variation{Name: varName, ExperimentID: experiment.ID}
+				DB.Create(&variation)
+			}
+	
+			// Fetch the full experiment with variations to treturn it in the response
+			var createdExperiment Experiment
+	
+			DB.Preload("Variations").First(&createdExperiment, experiment.ID)
+	
+			c.JSON(http.StatusCreated, createdExperiment)
+	
+		})
+	}
+	
+	
 	router.GET("/ping", func(c *gin.Context) {
-		// c.JSON() sends a JSON response,
-		//http.StatusOK is the standart HTTP code for "OK" (200).
-		//gin.h is a shortcut for map[string]interface{}, a generic way to create a JSON object.
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
+		
+	}) 
 
-	})
 	return router
 }
 
 func main() {
-	// set up the router using our function
+	ConnectDatabase()
 	router := setupRouter()
-
-	//router.Run() starts the web server on the default port (8080).
 	router.Run()
 }
 
