@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +13,11 @@ import (
 func setupRouter () *gin.Engine {
 	// gin.Default() creates a new Gin router with some default middleware (for logging, etc.)
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:8081"}
+
+	router.Use(cors.New(config))
 
 	// Group all our API endpoints under /api for better organization
 	api := router.Group("/api")

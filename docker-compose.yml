@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: ab-testing-db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ab_testing_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d ab_testing_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    container_name: ab-testing-backend
+    build: ./backend
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_SOURCE: "postgresql://user:password@db:5432/ab_testing_db?sslmode=disable"
+  
+  frontend:
+    container_name: ab-testing-frontend
+    build: ./frontend
+    restart: always
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+volumes:
+  postgres_data:

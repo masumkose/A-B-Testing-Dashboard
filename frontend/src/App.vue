@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app-container">
+    <header>
+      <h1>A/B Testing Dashboard</h1>
+    </header>
+    <main>
+      <CreateExperimentForm />
+      <ExperimentList />
+    </main>
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+<script setup>
+import ExperimentList from './components/ExperimentList.vue';
+import CreateExperimentForm from './components/CreateExperimentForm.vue';
 </script>
 
 <style>
-#app {
+#app-container {
+  max-width: 960px;
+  margin: 0 auto;
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+header {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+main {
+  display: flex;
+  gap: 40px;
+}
+main > * {
+  flex: 1;
 }
 </style>

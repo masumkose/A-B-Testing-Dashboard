@@ -18,7 +18,7 @@ FROM nginx:stable-alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
 
-COPY nginx.conf /etc/nginx/conf.default
+COPY nginx.conf /etc/nginx/conf.d
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
