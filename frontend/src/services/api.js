@@ -13,5 +13,13 @@ export default {
     },
     createExperiments(experimentData) {
         return apiClient.post('/experiments', experimentData);
+    },
+    recordConversion(variationID) {
+        // This endpoint takes the variation ID in the URL.
+        return apiClient.post(`/variations/${variationID}/convert`);
+    },
+    assignToVariation(experimentID) {
+        // This endpoint return the variation the use was assigned to.
+        return apiClient.post(`/experiments/${experimentID}/assign`);
     }
 };

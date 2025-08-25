@@ -48,7 +48,7 @@ func (h *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	c.JSON(http.StatusCreated, createdExperiment)
 }
 
-// AssignVariation handles GET /api/experiments/:id/assign
+// AssignVariation handles POST /api/experiments/:id/assign
 func (h *ExperimentHandler) AssignVariation(c *gin.Context) {
 	var experiment Experiment
 	if err := h.DB.Preload("Variations").First(&experiment, c.Param("id")).Error; err != nil {

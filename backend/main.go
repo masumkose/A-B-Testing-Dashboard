@@ -30,7 +30,7 @@ func setupRouter () *gin.Engine {
 		// Experiment route are now cleanerm just pointing to the handler methods.
 		api.GET("/experiments", expHandler.GetExperiments)
 		api.POST("/experiments", expHandler.CreateExperiment)
-		api.GET("/experiments/:id/assign", expHandler.AssignVariation)
+		api.POST("/experiments/:id/assign", expHandler.AssignVariation)
 
 		// Variation routes
 		api.POST("/variations/:id/convert", varHandler.ConvertVariation)
