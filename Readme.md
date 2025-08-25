@@ -1,6 +1,6 @@
 # A/B Testing Dashboard - Full-Stack Go & Vue.js Application
 
-![Build Status](https://github.com/masumkose/A-B-/actions/workflows/main.yml/badge.svg)
+![Build Status](https://github.com/masumkose/A-B-Testing-Dashboard/actions/workflows/main.yml/badge.svg)
 
 The application allows users to create experiments, define variations, and track key metrics like participant counts and conversions, providing a foundation for making data-driven product decisions.
 
@@ -52,26 +52,26 @@ This project was built using a modern, containerized architecture.
 
 ## 📂 Project Structure
 
-The project is organized into a clean, scalable monorepo structure.
-.
-├── .github/workflows/ # GitHub Actions CI/CD pipeline
-├── backend/
-│ ├── handlers/ # HTTP request handlers (controllers)
-│ ├── models/ # GORM data models (structs)
-│ ├── database.go # Database connection logic
-│ ├── main.go # Main application entrypoint and router
-│ ├── main_test.go # Unit and integration tests
-│ └── Dockerfile # Multi-stage Docker build for the Go app
-├── frontend/
-│ ├── src/
-│ │ ├── components/ # Reusable Vue components
-│ │ ├── services/ # API communication logic (axios)
-│ │ └── stores/ # Pinia state management
-│ ├── Dockerfile # Multi-stage Docker build for the Vue app
-│ └── nginx.conf # Nginx configuration for serving the SPA
-├── docker-compose.yml # Defines and orchestrates all services
-├── Makefile # Shortcut commands for development
-└── README.md # You are here!
+## The project is organized into a clean, scalable monorepo structure.
+## .
+## ├── .github/workflows/ # GitHub Actions CI/CD pipeline
+## ├── backend/
+## │ ├── handlers/ # HTTP request handlers (controllers)
+## │ ├── models/ # GORM data models (structs)
+## │ ├── database.go # Database connection logic
+## │ ├── main.go # Main application entrypoint and router
+## │ ├── main_test.go # Unit and integration tests
+## │ └── Dockerfile # Multi-stage Docker build for the Go app
+## ├── frontend/
+## │ ├── src/
+## │ │ ├── components/ # Reusable Vue components
+## │ │ ├── services/ # API communication logic (axios)
+## │ │ └── stores/ # Pinia state management
+## │ ├── Dockerfile # Multi-stage Docker build for the Vue app
+## │ └── nginx.conf # Nginx configuration for serving the SPA
+## ├── docker-compose.yml # Defines and orchestrates all services
+## ├── Makefile # Shortcut commands for development
+## └── README.md # You are here!
 
 
 ---
@@ -115,22 +115,24 @@ The project is organized into a clean, scalable monorepo structure.
 *   `make help`: Display all available commands.
 
 ---
-
-## 🧪 Running Tests
-
 The backend has a suite of unit and integration tests that run against an in-memory SQLite database for speed and isolation.
 
 To run the tests locally, use the Makefile shortcut:
 ```bash
 make test
 
+## 🧪 Running Tests
 
-🔄 CI/CD Pipeline
 
-This project uses GitHub Actions for its CI/CD pipeline. The workflow is defined in .github/workflows/main.yml and is triggered on every push to the main branch.
-The pipeline performs the following steps:
-Checks out the code.
-Runs the Go unit tests to ensure code quality.
-Builds production Docker images for both the backend and frontend services.
-Pushes the images to a container registry (e.g., Docker Hub).
+
+## 🔄 CI/CD Pipeline
+
+* This project uses GitHub Actions for its CI/CD pipeline. The workflow is defined in .github/workflows/main.yml and is triggered on every push to the main branch.
+* The pipeline performs the following steps:
+* Checks out the code.
+* Runs the Go unit tests to ensure code quality.
+* Builds production Docker images for both the backend and frontend services.
+* Pushes the images to a container registry (e.g., Docker Hub).
+
+
 ![alt text](image.png)

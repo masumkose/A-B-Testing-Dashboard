@@ -116,7 +116,7 @@ func TestAssignmentAndConversionEndpoints(t *testing.T) {
 
 	// 3. Test the Assignment Endpoint
 	t.Run("Assign User", func(t *testing.T) {
-		assignReq, _ := http.NewRequest("GET", "/api/experiments/1/assign", nil)
+		assignReq, _ := http.NewRequest("POST", "/api/experiments/1/assign", nil)
 		assignW := httptest.NewRecorder()
 		router.ServeHTTP(assignW, assignReq)
 
