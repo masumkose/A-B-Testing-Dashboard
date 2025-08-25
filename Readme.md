@@ -52,26 +52,26 @@ This project was built using a modern, containerized architecture.
 
 ## 📂 Project Structure
 
-## The project is organized into a clean, scalable monorepo structure.
-## .
-## ├── .github/workflows/ # GitHub Actions CI/CD pipeline
-## ├── backend/
-## │ ├── handlers/ # HTTP request handlers (controllers)
-## │ ├── models/ # GORM data models (structs)
-## │ ├── database.go # Database connection logic
-## │ ├── main.go # Main application entrypoint and router
-## │ ├── main_test.go # Unit and integration tests
-## │ └── Dockerfile # Multi-stage Docker build for the Go app
-## ├── frontend/
-## │ ├── src/
-## │ │ ├── components/ # Reusable Vue components
-## │ │ ├── services/ # API communication logic (axios)
-## │ │ └── stores/ # Pinia state management
-## │ ├── Dockerfile # Multi-stage Docker build for the Vue app
-## │ └── nginx.conf # Nginx configuration for serving the SPA
-## ├── docker-compose.yml # Defines and orchestrates all services
-## ├── Makefile # Shortcut commands for development
-## └── README.md # You are here!
+* The project is organized into a clean, scalable monorepo structure.
+* .
+* ├── .github/workflows/ # GitHub Actions CI/CD pipeline
+* ├── backend/
+* │ ├── handlers/ # HTTP request handlers (controllers)
+* │ ├── models/ # GORM data models (structs)
+* │ ├── database.go # Database connection logic
+* │ ├── main.go # Main application entrypoint and router
+* │ ├── main_test.go # Unit and integration tests
+* │ └── Dockerfile # Multi-stage Docker build for the Go app
+* ├── frontend/
+* │ ├── src/
+* │ │ ├── components/ # Reusable Vue components
+* │ │ ├── services/ # API communication logic (axios)
+* │ │ └── stores/ # Pinia state management
+* │ ├── Dockerfile # Multi-stage Docker build for the Vue app
+* │ └── nginx.conf # Nginx configuration for serving the SPA
+* ├── docker-compose.yml # Defines and orchestrates all services
+* ├── Makefile # Shortcut commands for development
+* └── README.md # You are here!
 
 
 ---
@@ -120,6 +120,7 @@ The backend has a suite of unit and integration tests that run against an in-mem
 To run the tests locally, use the Makefile shortcut:
 ```bash
 make test
+```
 
 ## 🧪 Running Tests
 
