@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -91,7 +92,63 @@ func TestExperimentEndpoints(t *testing.T) {
 		assert.Equal(t, 1, len(experiments))
 		assert.Equal(t, "Test Experiment", experiments[0].Name)
 	})
+}
 
 
+func TestAssignmentAndConversionEndpoints(t *testing.T) {
+	// 1. Set up a clean database and router.
+	setupTestDB()
+	router := setupRouter()
 
+	// 2. First, create an experiment to work with.
+	expPayload := []byte(`{"name": "Core Logic Test", "variations": ["Control", "Candidate"]}`)
+	req, _ := http.NewRequest("POST", "/api/experiments", bytes.NewBuffer(expPayload))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusCreated, w.Code)
+	
+	var createdExperiment Experiment
+	json.Unmarshal(w.Body.Bytes(), &createdExperiment)
+	assert.Equal(t, "Core Logic Test", createdExperiment.Name)
+	assert.Equal(t, 2, len(createdExperiment.Variations))
+
+	// 3. Test the Assignment Endpoint
+	t.Run("Assign User", func(t *testing.T) {
+		assignReq, _ := http.NewRequest("GET", "/api/experiments/1/assign", nil)
+		assignW := httptest.NewRecorder()
+		router.ServeHTTP(assignW, assignReq)
+
+		assert.Equal(t, http.StatusOK, assignW.Code)
+
+		var jsonResponse map[string]interface{}
+		json.Unmarshal(assignW.Body.Bytes(), &jsonResponse)
+		
+		// Check that the response contains one of the valid variation names.
+		variationName := jsonResponse["variationName"].(string)
+		assert.Contains(t, []string{"Control", "Candidate"}, variationName)
+
+		// Check that the participant count was incremented in the database.
+		var updatedExp Experiment
+		DB.Preload("Variations").First(&updatedExp, 1)
+		totalParticipants := updatedExp.Variations[0].Participants + updatedExp.Variations[1].Participants
+		assert.Equal(t, uint(1), totalParticipants)
+	})
+
+	// 4. Test the Conversion Endpoint
+	t.Run("Record Conversion", func(t *testing.T) {
+		// Let's assume the user was assigned variation with ID 2 ("Candidate").
+		convertReq, _ := http.NewRequest("POST", "/api/variations/2/convert", nil)
+		convertW := httptest.NewRecorder()
+		router.ServeHTTP(convertW, convertReq)
+
+		assert.Equal(t, http.StatusOK, convertW.Code)
+		assert.Contains(t, convertW.Body.String(), "Conversion recorded")
+
+		// Check that the conversion count was incremented in the database.
+		var convertedVariation Variation
+		DB.First(&convertedVariation, 2)
+		assert.Equal(t, uint(1), convertedVariation.Conversions)
+	})
 }
